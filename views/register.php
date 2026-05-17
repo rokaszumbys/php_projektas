@@ -9,15 +9,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $database = new Database();
     $db = $database->connect();
 
-    $user = new User($db);
+    if ($db) {
+        $user = new User($db);
 
-    $username = $_POST["username"];
-    $password = $_POST["password"];
+        $username = $_POST["username"];
+        $password = $_POST["password"];
 
-    if ($user->register($username, $password)) {
-        $message = "Registracija sėkminga!";
+        if ($user->register($username, $password)) {
+            $message = "Registracija sėkminga!";
+        } else {
+            $message = "Toks vartotojo vardas jau egzistuoja.";
+        }
     } else {
-        $message = "Registracijos klaida. Toks vartotojo vardas jau egzistuoja";
+        $message = "Nepavyko prisijungti prie duomenų bazės.";
     }
 }
 
@@ -30,6 +34,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Registracija</title>
 </head>
 <body>
+
+<?php if (!empty($message)): ?>
+    <script>
+        alert("<?php echo $message; ?>");
+    </script>
+<?php endif; ?>
 
 <h2>Registracija</h2>
 
