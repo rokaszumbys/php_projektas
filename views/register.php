@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($user->register($username, $password)) {
         $message = "Registracija sėkminga!";
     } else {
-        $message = "Registracijos klaida.";
+        $message = "Registracijos klaida. Toks vartotojo vardas jau egzistuoja";
     }
 }
 
