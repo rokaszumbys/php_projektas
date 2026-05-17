@@ -11,22 +11,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $database = new Database();
     $db = $database->connect();
 
-    $userObj = new User($db);
+    if ($db) {
+        $userObj = new User($db);
 
-    $username = $_POST["username"];
-    $password = $_POST["password"];
+        $username = $_POST["username"];
+        $password = $_POST["password"];
 
-    $user = $userObj->login($username, $password);
+        $user = $userObj->login($username, $password);
 
-    if ($user) {
-        $_SESSION["user_id"] = $user["id"];
-        $_SESSION["username"] = $user["username"];
-        $_SESSION["plain_password"] = $password;
+        if ($user) {
+            $_SESSION["user_id"] = $user["id"];
+            $_SESSION["username"] = $user["username"];
+            $_SESSION["plain_password"] = $password;
 
-        header("Location: dashboard.php");
-        exit;
+            header("Location: dashboard.php");
+            exit;
+        } else {
+            $message = "Neteisingas vartotojo vardas arba slaptažodis.";
+        }
     } else {
-        $message = "Neteisingas vardas arba slaptažodis.";
+        $message = "Nepavyko prisijungti prie duomenų bazės.";
     }
 }
 
@@ -39,6 +43,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Prisijungimas</title>
 </head>
 <body>
+
+<?php if (!empty($message)): ?>
+    <script>
+        alert("<?php echo $message; ?>");
+    </script>
+<?php endif; ?>
 
 <h2>Prisijungimas</h2>
 
